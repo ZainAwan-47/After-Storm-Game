@@ -1,6 +1,5 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flame/game.dart';
 import '../game/after_storm_game.dart';
 
 class AfterStormApp extends StatelessWidget {
@@ -9,22 +8,27 @@ class AfterStormApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'After Storm',
-      theme: ThemeData(brightness: Brightness.dark, useMaterial3: true),
-      home: const AfterStormGameScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF0F172A),
+        useMaterial3: true,
+        fontFamily: 'Roboto',
+      ),
+      home: const GameContainerScreen(),
     );
   }
 }
 
-class AfterStormGameScreen extends StatefulWidget {
-  const AfterStormGameScreen({super.key});
+class GameContainerScreen extends StatefulWidget {
+  const GameContainerScreen({super.key});
 
   @override
-  State<AfterStormGameScreen> createState() => _AfterStormGameScreenState();
+  State<GameContainerScreen> createState() => _GameContainerScreenState();
 }
 
-class _AfterStormGameScreenState extends State<AfterStormGameScreen> {
+class _GameContainerScreenState extends State<GameContainerScreen> {
   late final AfterStormGame _game;
 
   @override
@@ -34,13 +38,44 @@ class _AfterStormGameScreenState extends State<AfterStormGameScreen> {
   }
 
   @override
-  void dispose() {
-    _game.pauseEngine();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(body: GameWidget(game: _game));
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Flame Gameplay Layer
+          Positioned.fill(
+            child: GameWidget(game: _game),
+          ),
+          
+          // Temporary Foundation Overlay indicator
+          // (This will be replaced by our modular UI screens in the next prompts)
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white24),
+                  ),
+                  child: const Text(
+                    'AFTER STORM — FOUNDATION ACTIVE',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
